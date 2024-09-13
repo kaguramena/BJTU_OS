@@ -9,5 +9,5 @@ int cd(int argc, char *argv[])
         strcpy(path, argv[1]);
     }
     chdir(path);
-    return 0;
+    return 1;
 }
