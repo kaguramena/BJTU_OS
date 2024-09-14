@@ -7,7 +7,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
-int mkdir(int argc, char *argv[])
+int _mkdir(int argc, char *argv[])
 {
     if (argc < 2)
     {

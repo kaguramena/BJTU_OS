@@ -169,7 +169,7 @@ release:
   return name;
 }
 
-int main(int argc, char *argv[])
+int _pstree(int argc, char *argv[])
 {
   for (int i = 0; i < argc; i++)
   {

@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <string.h>
 
-int echo(int argc, char *argv[])
+int _echo(int argc, char *argv[])
 {
     int newline = 1; // 默认在输出结束后添加换行符
 
@@ -28,11 +28,5 @@ int echo(int argc, char *argv[])
     {
         printf("\n");
     }
-    return 0;
-}
-
-int main(int argc, char *argv[])
-{
-    echo(argc, argv);
     return 0;
 }
