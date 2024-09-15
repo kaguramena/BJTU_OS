@@ -10,6 +10,8 @@
 #define ARG_DELIM " \n\t\a\r"
 #define MAX_ARGS 5
 
+char __HOME[128];
+
 extern int _cd(int argc,char* argv[]);
 extern int _echo(int argc,char* argv[]);
 extern int _mkdir(int argc,char* argv[]);
@@ -51,7 +53,31 @@ char **parse_command_line(char* command,int* argc)
     token = strtok(command,ARG_DELIM);
     while(token != NULL)
     {
-        tokens[position] = token;
+        // create safe token
+        char* s_token = (char*)malloc(256 * sizeof(char));
+        strcpy(s_token,token);
+        if(s_token[0] == '~')
+        {
+            char s[128];
+            sprintf(s,"%s%s\0",__HOME,s_token + 1);
+            strcpy(s_token,s);
+            tokens[position] = s_token;
+        }
+        else if(s_token[0] == '$')
+        {
+            char s[128];
+            strcpy(s,s_token + 1);
+            
+            char* _env = getenv(s);
+            strcpy(s_token,_env);
+            
+            tokens[position] = s_token;
+        }
+        else
+        {
+            tokens[position] = s_token;
+        }
+        
         position ++;
         if(position >= BUF_SIZE)
         {
@@ -74,6 +100,9 @@ char **parse_command_line(char* command,int* argc)
 int main()
 {
     char _PWD[128];
+    //获取HOME环境变量
+    char *s_s = getenv("HOME");
+    strcpy(__HOME,s_s);
     while(1)
     {
         char* s = getenv("PWD");
@@ -86,6 +115,11 @@ int main()
         
         //fputs(_COMMAND,stdout); //Debug Need it 
         argv = parse_command_line(_COMMAND,&argc);
+
+        // for(int i = 0;i < argc;i++)
+        // {
+        //     printf("%s\n",argv[i]);
+        // }
         
         _COMMAND[strcspn(_COMMAND, "\n")] = 0;
         
@@ -93,7 +127,7 @@ int main()
         {
             _cd(argc,argv);
             char _CWD[128];
-            getcwd(_CWD,sizeof(_CWD)); 
+            getcwd(_CWD,sizeof(_CWD));
             setenv("PWD",_CWD,1); // reset the env_variable of PWD
         }
         else if(!strncmp(_COMMAND,"ls",2))
@@ -107,6 +141,7 @@ int main()
         }
         else if(!strncmp(_COMMAND,"echo",4))
         {
+            
             _echo(argc,argv);
         }
         else if(!strncmp(_COMMAND,"mkdir",5))
@@ -137,10 +172,14 @@ int main()
                 do
                 {
                     waitpid(pid, &status, 0);
-                }while(!WIFSIGNALED(status) | !WIFEXITED(status));
+                }while(!WIFSIGNALED(status) && !WIFEXITED(status));
             }
         }
-        free(_COMMAND);
+        // 释放所有动态内存
+        for(int i = 0;i < argc;i++)
+        {
+            free(argv[i]);
+        }
     }
     
 }

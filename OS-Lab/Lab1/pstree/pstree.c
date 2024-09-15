@@ -5,7 +5,7 @@
 #include <malloc.h>
 #include <stdbool.h>
 
-#define MAX_PROC_NUMBER 300
+#define MAX_PROC_NUMBER 600
 
 char *get_proc_name(int number);
 void get_proc_pid_ppid(char *number, int *pid, int *ppid);
@@ -116,6 +116,7 @@ void get_all_proc()
   DIR *d;
   struct dirent *dir;
   d = opendir("/proc");
+  
   if (d)
   {
     while ((dir = readdir(d)) != NULL)
@@ -129,15 +130,23 @@ void get_all_proc()
         int pid = 0;
         int ppid = 0;
         get_proc_pid_ppid(dir->d_name, &pid, &ppid);
+        //printf("1");
         add_edge(ppid, pid);
+        
       }
+      //return;
+        
     }
+    
+    
   }
   else
   {
     printf("Can't open /proc!");
   }
+  
   closedir(d);
+  
 }
 
 void get_proc_pid_ppid(char *number, int *pid, int *ppid)
@@ -177,6 +186,7 @@ int _pstree(int argc, char *argv[])
     printf("argv[%d] = %s\n", i, argv[i]);
   }
   assert(!argv[argc]);
+  
   get_all_proc();
   show_ptree();
   return 0;
