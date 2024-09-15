@@ -66,7 +66,7 @@ char **parse_command_line(char* command,int* argc)
         token = strtok(NULL,ARG_DELIM);
     }
     tokens[position] = NULL;
-    *argc = position - 1;
+    *argc = position;
     return tokens;
 }
 
