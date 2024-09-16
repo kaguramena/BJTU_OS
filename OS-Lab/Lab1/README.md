@@ -14,15 +14,24 @@
 **内置命令**
 
 * cd
+
 ![cd预览](img/cd_preview.png)
 如果只输入'cd',那么将返回$HOME路径。
+
 * ls
+
 ![ls预览](img/ls_preview.png)
+
 * echo
+
 ![echo预览](img/echo_preview.png)
+
 * mkdir
+
 ![mkdir预览](img/mkdir_preview.png)
+
 * pstree
+
 ![pstree预览](img/pstree_preview.png)
 pstree是一个简易版的实现，距离真实shell端的pstree还有一定区别，但是可以实现具体功能
 

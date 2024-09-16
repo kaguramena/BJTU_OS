@@ -180,6 +180,7 @@ int main()
         {
             free(argv[i]);
         }
+        free(_COMMAND);
     }
     
 }
