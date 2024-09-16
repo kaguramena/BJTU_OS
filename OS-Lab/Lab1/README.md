@@ -16,6 +16,7 @@
 * cd
 
 ![cd预览](img/cd_preview.png)
+
 如果只输入'cd',那么将返回$HOME路径。
 
 * ls
