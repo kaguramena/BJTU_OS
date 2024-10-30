@@ -1,0 +1,78 @@
+Adress of three pointer : fifo : 0xac5934ced2a0, rr : 0xac5934ced760, stcf : 0xac5934cedc20
+Job 3, Come time 1, Excute time : 2
+Job 1, Come time 2, Excute time : 5
+Job 0, Come time 3, Excute time : 6
+Job 2, Come time 3, Excute time : 5
+Time		Job		State
+0			
+1			3		Waiting Jobs : 
+2			3		Waiting Jobs : 1	
+3			1		Waiting Jobs : 0	2	
+4			1		Waiting Jobs : 0	2	
+5			1		Waiting Jobs : 0	2	
+6			1		Waiting Jobs : 0	2	
+7			1		Waiting Jobs : 0	2	
+8			0		Waiting Jobs : 2	
+9			0		Waiting Jobs : 2	
+10			0		Waiting Jobs : 2	
+11			0		Waiting Jobs : 2	
+12			0		Waiting Jobs : 2	
+13			0		Waiting Jobs : 2	
+14			2		Waiting Jobs : 
+15			2		Waiting Jobs : 
+16			2		Waiting Jobs : 
+17			2		Waiting Jobs : 
+18			2		Waiting Jobs : 
+
+RR Schedule 
+Job 3, Come time 1, Excute time : 2
+Job 1, Come time 2, Excute time : 5
+Job 0, Come time 3, Excute time : 6
+Job 2, Come time 3, Excute time : 5
+Time		Job		State
+0
+1
+2			3		
+3			1		
+4			3		Job 3 has done
+5			1		
+6			0		
+7			2		
+8			1		
+9			0		
+10			2		
+11			1		
+12			0		
+13			2		
+14			1		Job 1 has done
+15			0		
+16			2		
+17			0		
+18			2		Job 2 has done
+19			0		Job 0 has done
+
+STCF Schedule 
+Job 3, Come time 1, Excute time : 2
+Job 1, Come time 2, Excute time : 5
+Job 0, Come time 3, Excute time : 6
+Job 2, Come time 3, Excute time : 5
+Time		Job		State		
+
+1			3		
+2			3		3 has done
+3			1		
+4			1		
+5			1		
+6			1		
+7			1		1 has done
+8			2		
+9			2		
+10			2		
+11			2		
+12			2		2 has done
+13			0		
+14			0		
+15			0		
+16			0		
+17			0		
+18			0		0 has done
