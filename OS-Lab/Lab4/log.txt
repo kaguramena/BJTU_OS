@@ -1,0 +1,286 @@
+Report:
+Process 0 from 0KB to 131072KB
+Avaliable from 131072KB to 524288KB
+--------------------
+Time : 1
+Create Process : 
+Process 1 create in 1
+Process 1 has been allocate memory from 131072KB to 131078KB
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 1 from 131072KB to 131078KB
+Avaliable from 131078KB to 524288KB
+--------------------
+--------------------
+Time : 2
+Create Process : 
+Process 2 create in 2
+Process 2 has been allocate memory from 131078KB to 131091KB
+Free Process : 
+Process 1 free in 2
+Report:
+Process 0 from 0KB to 131072KB
+Process 2 from 131078KB to 131091KB
+Avaliable from 131072KB to 131078KB
+Avaliable from 131091KB to 524288KB
+--------------------
+--------------------
+Time : 3
+Create Process : 
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 2 from 131078KB to 131091KB
+Avaliable from 131072KB to 131078KB
+Avaliable from 131091KB to 524288KB
+--------------------
+--------------------
+Time : 4
+Create Process : 
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 2 from 131078KB to 131091KB
+Avaliable from 131072KB to 131078KB
+Avaliable from 131091KB to 524288KB
+--------------------
+--------------------
+Time : 5
+Create Process : 
+Process 3 create in 5
+Process 3 has been allocate memory from 131072KB to 131073KB
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 2 from 131078KB to 131091KB
+Process 3 from 131072KB to 131073KB
+Avaliable from 131073KB to 131078KB
+Avaliable from 131091KB to 524288KB
+--------------------
+--------------------
+Time : 6
+Create Process : 
+Process 4 create in 6
+Process 4 has been allocate memory from 131091KB to 131101KB
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 2 from 131078KB to 131091KB
+Process 3 from 131072KB to 131073KB
+Process 4 from 131091KB to 131101KB
+Avaliable from 131073KB to 131078KB
+Avaliable from 131101KB to 524288KB
+--------------------
+--------------------
+Time : 7
+Create Process : 
+Process 5 create in 7
+Process 5 has been allocate memory from 131101KB to 131107KB
+Free Process : 
+Process 3 free in 7
+Report:
+Process 0 from 0KB to 131072KB
+Process 2 from 131078KB to 131091KB
+Process 4 from 131091KB to 131101KB
+Process 5 from 131101KB to 131107KB
+Avaliable from 131072KB to 131078KB
+Avaliable from 131107KB to 524288KB
+--------------------
+--------------------
+Time : 8
+Create Process : 
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 2 from 131078KB to 131091KB
+Process 4 from 131091KB to 131101KB
+Process 5 from 131101KB to 131107KB
+Avaliable from 131072KB to 131078KB
+Avaliable from 131107KB to 524288KB
+--------------------
+--------------------
+Time : 9
+Create Process : 
+Free Process : 
+Process 2 free in 9
+Process 4 free in 9
+Report:
+Process 0 from 0KB to 131072KB
+Process 5 from 131101KB to 131107KB
+Avaliable from 131072KB to 131101KB
+Avaliable from 131107KB to 524288KB
+--------------------
+--------------------
+Time : 10
+Create Process : 
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 5 from 131101KB to 131107KB
+Avaliable from 131072KB to 131101KB
+Avaliable from 131107KB to 524288KB
+--------------------
+--------------------
+Time : 11
+Create Process : 
+Process 6 create in 11
+Process 6 has been allocate memory from 131072KB to 131080KB
+Free Process : 
+Process 5 free in 11
+Report:
+Process 0 from 0KB to 131072KB
+Process 6 from 131072KB to 131080KB
+Avaliable from 131080KB to 524288KB
+--------------------
+--------------------
+Time : 12
+Create Process : 
+Process 7 create in 12
+Process 7 has been allocate memory from 131080KB to 131082KB
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 6 from 131072KB to 131080KB
+Process 7 from 131080KB to 131082KB
+Avaliable from 131082KB to 524288KB
+--------------------
+--------------------
+Time : 13
+Create Process : 
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 6 from 131072KB to 131080KB
+Process 7 from 131080KB to 131082KB
+Avaliable from 131082KB to 524288KB
+--------------------
+--------------------
+Time : 14
+Create Process : 
+Process 8 create in 14
+Process 8 has been allocate memory from 131082KB to 131089KB
+Free Process : 
+Process 7 free in 14
+Report:
+Process 0 from 0KB to 131072KB
+Process 6 from 131072KB to 131080KB
+Process 8 from 131082KB to 131089KB
+Avaliable from 131080KB to 131082KB
+Avaliable from 131089KB to 524288KB
+--------------------
+--------------------
+Time : 15
+Create Process : 
+Process 9 create in 15
+Process 9 has been allocated memory from 131080KB to 131082KB
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 6 from 131072KB to 131080KB
+Process 8 from 131082KB to 131089KB
+Process 9 from 131080KB to 131082KB
+Avaliable from 131089KB to 524288KB
+--------------------
+--------------------
+Time : 16
+Create Process : 
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 6 from 131072KB to 131080KB
+Process 8 from 131082KB to 131089KB
+Process 9 from 131080KB to 131082KB
+Avaliable from 131089KB to 524288KB
+--------------------
+--------------------
+Time : 17
+Create Process : 
+Process 10 create in 17
+Process 10 has been allocate memory from 131089KB to 131096KB
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 6 from 131072KB to 131080KB
+Process 8 from 131082KB to 131089KB
+Process 9 from 131080KB to 131082KB
+Process 10 from 131089KB to 131096KB
+Avaliable from 131096KB to 524288KB
+--------------------
+--------------------
+Time : 18
+Create Process : 
+Free Process : 
+Process 6 free in 18
+Process 10 free in 18
+Report:
+Process 0 from 0KB to 131072KB
+Process 8 from 131082KB to 131089KB
+Process 9 from 131080KB to 131082KB
+Avaliable from 131072KB to 131080KB
+Avaliable from 131089KB to 524288KB
+--------------------
+--------------------
+Time : 19
+Create Process : 
+Process 11 create in 19
+Process 11 has been allocate memory from 131072KB to 131074KB
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 8 from 131082KB to 131089KB
+Process 9 from 131080KB to 131082KB
+Process 11 from 131072KB to 131074KB
+Avaliable from 131074KB to 131080KB
+Avaliable from 131089KB to 524288KB
+--------------------
+--------------------
+Time : 20
+Create Process : 
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 8 from 131082KB to 131089KB
+Process 9 from 131080KB to 131082KB
+Process 11 from 131072KB to 131074KB
+Avaliable from 131074KB to 131080KB
+Avaliable from 131089KB to 524288KB
+--------------------
+--------------------
+Time : 21
+Create Process : 
+Free Process : 
+Process 8 free in 21
+Process 9 free in 21
+Report:
+Process 0 from 0KB to 131072KB
+Process 11 from 131072KB to 131074KB
+Avaliable from 131074KB to 524288KB
+--------------------
+--------------------
+Time : 22
+Create Process : 
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 11 from 131072KB to 131074KB
+Avaliable from 131074KB to 524288KB
+--------------------
+--------------------
+Time : 23
+Create Process : 
+Free Process : 
+Report:
+Process 0 from 0KB to 131072KB
+Process 11 from 131072KB to 131074KB
+Avaliable from 131074KB to 524288KB
+--------------------
+--------------------
+Time : 24
+Create Process : 
+Free Process : 
+Process 11 free in 24
+Report:
+Process 0 from 0KB to 131072KB
+Avaliable from 131072KB to 524288KB
+--------------------
