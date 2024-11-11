@@ -2,13 +2,15 @@
 #include<assert.h>
 #include<stdlib.h>
 #include<stdbool.h>
+#include<string.h>
 
 #define KB 1024
 #define MB (1024 * KB)
 #define MEMORY (512 * MB)
+#define MAX_PROCESS_NEED_KB ((MEMORY - 128* MB)/KB)
 #define MIN_UNIT_SIZE KB
 #define UNIT_NUMBER (MEMORY/MIN_UNIT_SIZE)
-#define MAX_HANG_NUMBER 10
+#define MAX_HANG_NUMBER 60
 #define MAX_PROCESS_NUMBER 60
 
 typedef struct Node{
@@ -87,6 +89,7 @@ typedef struct{
     int end_pos;
 
     int create_time;
+    int start_time;
     int exec_time;
 
     int status; // create,hang,alllocate,delete
@@ -95,11 +98,11 @@ typedef struct{
 int pid_p = 1; // 0 for the OS
 int CreateProcess(Process* p,int timeclamp){
     p->pid = pid_p++;
-    p->need = (rand() % 20) * KB;
+    p->need = (rand() % MAX_PROCESS_NEED_KB) * KB;
     p->status = 1;
     p->create_time = timeclamp;
     p->exec_time = (rand() % 8);
-    printf("Process %d create in %d\n",p->pid,timeclamp);
+    printf("Process %d create in %d, need memory for %dKB, exec time %d\n",p->pid,timeclamp,p->need/KB,p->exec_time);
     return 0;
 }
 
@@ -143,8 +146,42 @@ int InitProcessList(ProcessList * list){
 void InsertProcess(ProcessList* list,Process* p){
     assert(list!=NULL);
     assert(p!=NULL);
-    list->list[list->start + list->num++] = p;
-    return 0;
+    list->list[list->num++] = p;
+    return;
+}
+
+int FreeMemory(AvailableList * ava_list,Process* p){
+    Node* new_node = (Node*)malloc(sizeof(Node));
+    new_node->start_pos = p->start_pos;
+    new_node->end_pos = p->end_pos;
+    new_node->size = p->need;
+    ava_list->available += p->need;
+    //If ava_list has no node
+    if(ava_list->available == 0){
+        assert(ava_list->first_node==NULL);
+        ava_list->first_node = new_node;
+        new_node->next = NULL;
+        return 0;
+    }
+    if(ava_list->first_node->start_pos >= new_node->end_pos){
+        new_node->next = ava_list->first_node;
+        ava_list->first_node = new_node;
+        return 0;
+    }
+    for(Node* n = ava_list->first_node;n!=NULL;n = n->next){
+        if(n->end_pos <= new_node->start_pos){
+            if(n->next == NULL){
+                n->next = new_node;
+                return 0;
+            }else if(n->next->start_pos >= new_node->end_pos){
+                new_node->next = n->next;
+                n->next = new_node;
+                return 0;
+            }else{
+                continue;
+            }
+        }
+    }
 }
 
 void FreeProcess(AvailableList* ava_list,ProcessList* proc_list,Process* p,int time){
@@ -185,6 +222,14 @@ int InitHangList(HangList * list){
 int HangProcess(HangList* list,Process* p){
     assert(list != NULL);
     assert(p != NULL);
+    for(int i = list->start;i < list->num;i++)
+    {
+        if(list->list[i] == NULL){
+            list->list[i] = p;
+            p->status = 2;
+            return 0;
+        }
+    }
     list->list[list->start + list->num++] = p;
     p->status = 2;
     return 0;
@@ -205,13 +250,13 @@ int InitOS(AvailableList* ava_list,ProcessList* p_list){
     return 0;
 }
 
-int AllocateMemory(AvailableList * ava_list,HangList* hang_list,ProcessList* proc_list,Process * p){
+int AllocateMemory_FirstMatch(AvailableList * ava_list,HangList* hang_list,ProcessList* proc_list,Process * p){
     assert(ava_list != NULL);
     assert(p != NULL);
     // First ,check if there's enough memory
     if(ava_list->available < p->need){
         HangProcess(hang_list,p);
-        printf("Process %d has been hang up",p->pid);
+        printf("Process %d has been hang up\n",p->pid);
         return 1; // 1 rep hangout
     }
     // Second ,find if there's enough node to allocate
@@ -281,45 +326,113 @@ int AllocateMemory(AvailableList * ava_list,HangList* hang_list,ProcessList* pro
             node = node->next;
             if(node == NULL){
                 HangProcess(hang_list,p);
-                printf("Process %d has been hang up",p->pid);
+                printf("Process %d has been hang up\n",p->pid);
                 return 1;
             }
         }
     }
 }
 
-int FreeMemory(AvailableList * ava_list,Process* p){
-    Node* new_node = (Node*)malloc(sizeof(Node));
-    new_node->start_pos = p->start_pos;
-    new_node->end_pos = p->end_pos;
-    new_node->size = p->need;
-    //If ava_list has no node
-    if(ava_list->available == 0){
-        assert(ava_list->first_node==NULL);
-        ava_list->first_node = new_node;
-        new_node->next = NULL;
-        return 0;
+int AllocateMemory_BestMatch(AvailableList * ava_list,HangList* hang_list,ProcessList* proc_list,Process * p){
+    assert(ava_list != NULL);
+    assert(p != NULL);
+    // First ,check if there's enough memory
+    if(ava_list->available < p->need){
+        HangProcess(hang_list,p);
+        printf("Process %d has been hang up\n",p->pid);
+        return 1; // 1 rep hangout
     }
-    if(ava_list->first_node->start_pos >= new_node->end_pos){
-        new_node->next = ava_list->first_node;
-        ava_list->first_node = new_node;
-        return 0;
+    // Second ,find if there's enough node to allocate
+    Node* node = ava_list->first_node;
+    Node* bestnode = NULL;
+    for(Node* n = ava_list->first_node;n != NULL; n = n->next){
+        if(n->size >= p->need){
+            if(bestnode == NULL){
+                bestnode = n;
+            }else if(bestnode->size < n->size){
+                bestnode = n;
+            }
+        }
     }
-    for(Node* n = ava_list->first_node;n!=NULL;n = n->next){
-        if(n->end_pos <= new_node->start_pos){
-            if(n->next == NULL){
-                n->next = new_node;
-                return 0;
-            }else if(n->next->start_pos >= new_node->end_pos){
-                new_node->next = n->next;
-                n->next = new_node;
-                return 0;
-            }else{
-                continue;
+    node = bestnode;
+    if(node == NULL){
+        HangProcess(hang_list,p);
+        printf("Process %d has been hang up\n",p->pid);
+        return 1; // 1 rep hangout
+    }
+    if(node != NULL){
+        if(node->size >= p->need){ // Find Node
+            // if it is the first node
+            if(node == ava_list->first_node){
+                //Allocate the memory from first node
+                //If need memory equal the last memory
+                if(node->size == p->need){
+                    //If there are other node
+                    if(node->next != NULL){
+                        ava_list->first_node = node->next;
+                        ava_list->available -= p->need;
+
+                        p->start_pos = node->start_pos;
+                        p->end_pos = node->end_pos;
+                        p->status = 1;
+                        InsertProcess(proc_list,p);
+                        printf("Process %d has been allocated memory from %dKB to %dKB\n",p->pid,p->start_pos/KB,p->end_pos/KB);
+                        free(node);
+                        return 0; // 0 rep allocate
+                    }else{ // If there is no other node
+                        ava_list->first_node = NULL;
+                        ava_list->available -= p->need;
+
+                        p->start_pos = node->start_pos;
+                        p->end_pos = node->end_pos;
+                        p->status = 1;
+                        InsertProcess(proc_list,p);
+                        printf("Process %d has been allocate memory from %dKB to %dKB\n",p->pid,p->start_pos/KB,p->end_pos/KB);
+                        free(node);
+                        return 0;
+                    }
+                }else{ // If need memory less than node last memory
+                    ava_list->available -= p->need;
+                    AllocateNodeToProcess(node,p);
+                    InsertProcess(proc_list,p);
+                    printf("Process %d has been allocate memory from %dKB to %dKB\n",p->pid,p->start_pos/KB,p->end_pos/KB);
+                    return 0;
+                }
+            }else{ //Not the first Node
+                if(node->size == p->need){
+                    //Find the front node
+                    Node* front_node = FindFrontNode(ava_list,node);
+                    assert(front_node != NULL);
+                    front_node ->next = node->next;
+                    ava_list->available -= p->need;
+
+                    p->start_pos = node->start_pos;
+                    p->end_pos = node->end_pos;
+                    p->status = 1;
+                    InsertProcess(proc_list,p);
+                    printf("Process %d has been allocate memory from %dKB to %dKB\n",p->pid,p->start_pos/KB,p->end_pos/KB);
+                    free(node);
+                    return 0;
+                }else{
+                    ava_list->available -= p->need;
+                    AllocateNodeToProcess(node,p);
+                    InsertProcess(proc_list,p);
+                    printf("Process %d has been allocate memory from %dKB to %dKB\n",p->pid,p->start_pos/KB,p->end_pos/KB);
+                    return 0;
+                }
+            }
+        }else{
+            node = node->next;
+            if(node == NULL){
+                HangProcess(hang_list,p);
+                printf("Process %d has been hang up\n",p->pid);
+                return 1;
             }
         }
     }
 }
+
+
 
 void report(AvailableList* ava_list,HangList* hang_list,ProcessList* proc_list){
     printf("Report:\n");
@@ -327,7 +440,7 @@ void report(AvailableList* ava_list,HangList* hang_list,ProcessList* proc_list){
     ReportAvailableList(ava_list);
 }
 
-void simulate(AvailableList* ava_list,HangList* hang_list,ProcessList* proc_list){
+void simulate(AvailableList* ava_list,HangList* hang_list,ProcessList* proc_list,int allocate_func(AvailableList*,HangList*,ProcessList*,Process*)){
     report(ava_list,hang_list,proc_list);
     int timeclamp = 1; // time 
     int proc_sum = 0;
@@ -336,20 +449,34 @@ void simulate(AvailableList* ava_list,HangList* hang_list,ProcessList* proc_list
     while(flag){
         printf("--------------------\n");
         printf("Time : %d\n",timeclamp);
+        printf("Check Hang Process : \n");
+        for(int i = hang_list->start;i < hang_list->num;i++){
+            if(hang_list->list[i] != NULL){
+                Process* h_proc = hang_list->list[i];
+                hang_list->list[i] = NULL;
+                int st = allocate_func(ava_list,hang_list,proc_list,h_proc);
+                if(st == 0){ // process
+                    h_proc->start_time = timeclamp;
+                }
+            }
+        }
         printf("Create Process : \n");
-        int proc_num = proc_sum > 10 ? 0 : rand()%2;// new proc
+        int proc_num = proc_sum > 50 ? 0 : rand()%2;// new proc
         proc_sum += proc_num;
         proc_alive += proc_num;
         for(int i = 0;i < proc_num;i++){
             Process* proc = (Process*)malloc(sizeof(Process));
             CreateProcess(proc,timeclamp);
-            AllocateMemory(ava_list,hang_list,proc_list,proc);
+            int st = allocate_func(ava_list,hang_list,proc_list,proc);
+            if(st == 0){ // process
+                proc->start_time = timeclamp;
+            }
         }
         printf("Free Process : \n");
         // Clean dead proc
-        for(int i = proc_list->start;i < proc_list->num;i++){
+        for(int i = 0;i < proc_list->num;i++){
             if(proc_list->list[i] != NULL){
-                if(proc_list->list[i]->create_time + proc_list->list[i]->exec_time == timeclamp){
+                if(proc_list->list[i]->start_time + proc_list->list[i]->exec_time == timeclamp){
                     proc_alive-=1;
                     FreeProcess(ava_list,proc_list,proc_list->list[i],timeclamp);
                 }
@@ -360,7 +487,7 @@ void simulate(AvailableList* ava_list,HangList* hang_list,ProcessList* proc_list
         timeclamp++;
         report(ava_list,hang_list,proc_list);
         printf("--------------------\n");
-        if(proc_alive == 0){
+        if(proc_alive == 0 && proc_sum > 50){
             flag = false;
         }
     }
@@ -372,12 +499,20 @@ int main(int argc,char* argv[]){
     HangList * hang_list = (HangList*)malloc(sizeof(HangList));
     ProcessList * proc_list = (ProcessList*)malloc(sizeof(ProcessList));
 
+    assert(argc == 2);
+    printf("%s\n",argv[1]);
+
     InitAvailableList(ava_list);
     InitHangList(hang_list);
     InitProcessList(proc_list);
     InitOS(ava_list,proc_list);
 
-    simulate(ava_list,hang_list,proc_list);
+    if(strcmp(argv[1],"FirstMatch") == 0){
+        simulate(ava_list,hang_list,proc_list,AllocateMemory_FirstMatch);
+    }else if(strcmp(argv[1],"BestMatch") == 0){
+        simulate(ava_list,hang_list,proc_list,AllocateMemory_BestMatch);
+    }
+    
 
     FreeAvailableList(ava_list);
     free(hang_list);
