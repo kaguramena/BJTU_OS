@@ -1,0 +1,1 @@
+savedcmd_/home/kagu/code/BJTU_OS/OS-Lab/Lab5/myalarm.ko := ld -r -EL  -maarch64elf -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T scripts/module.lds -o /home/kagu/code/BJTU_OS/OS-Lab/Lab5/myalarm.ko /home/kagu/code/BJTU_OS/OS-Lab/Lab5/myalarm.o /home/kagu/code/BJTU_OS/OS-Lab/Lab5/myalarm.mod.o

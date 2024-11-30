@@ -1,0 +1,1 @@
+savedcmd_/home/kagu/code/BJTU_OS/OS-Lab/Lab5/modules.order := {   echo /home/kagu/code/BJTU_OS/OS-Lab/Lab5/mydevice.o;   echo /home/kagu/code/BJTU_OS/OS-Lab/Lab5/myalarm.o; :; } > /home/kagu/code/BJTU_OS/OS-Lab/Lab5/modules.order
